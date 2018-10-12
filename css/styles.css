@@ -127,17 +127,17 @@ nav h1 a {
 }
 /* ====================== Restaurant Filtering ====================== */
 .filter-options {
-  /* display: flex; */
+  display: flex;
   width: 100%;
   height: 50px;
   background-color: #3397db;
 }
 
-/* .filter-options-inner-container {
+.filter-options-inner-container {
   display: flex;
   margin: auto;
   align-items: center;
-} */
+}
 
 .filter-options h2 {
   color: white;
