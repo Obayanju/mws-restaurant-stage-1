@@ -160,8 +160,8 @@ nav h1 a {
 
 /* ====================== Restaurant Listing ====================== */
 #restaurants-list {
-  /* display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr; */
+  display: grid;
+  grid-template-columns: repeat(2, 50%);
   background-color: #f3f3f3;
   list-style: outside none none;
   margin: 0;
