@@ -144,7 +144,7 @@ nav h1 a {
   font-size: 1rem;
   font-weight: normal;
   line-height: 1;
-  margin: 0 20px;
+  margin-bottom: 0;
 }
 .filter-options select {
   background-color: white;
@@ -156,6 +156,11 @@ nav h1 a {
   margin: 10px;
   padding: 0 10px;
   width: 200px;
+}
+
+/* filter options container has even left and right margins */
+.filter-options-inner-container select:last-child {
+  margin-right: 0;
 }
 
 /* ====================== Restaurant Listing ====================== */
@@ -304,4 +309,14 @@ nav h1 a {
 }
 #restaurant-hours td {
   color: #666;
+}
+/* ---------------RESPONSIVE DESIGN SECTION----------------- */
+
+@media screen and (max-width: 570px) {
+  .filter-options {
+    height: 150px;
+  }
+  .filter-options-inner-container {
+    flex-direction: column;
+  }
 }
