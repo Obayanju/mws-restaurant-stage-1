@@ -57,6 +57,8 @@ section {
   display: block;
 }
 #maincontent {
+  display: flex;
+  flex-direction: column;
   background-color: #f3f3f3;
   min-height: 100%;
 }
@@ -93,7 +95,7 @@ nav h1 a {
   background-color: #eee;
   font-size: 17px;
   margin: 0;
-  width: calc(50% - 80px);
+  width: 100%;
 }
 
 /* Display list items side by side */
@@ -223,15 +225,13 @@ nav h1 a {
   position: fixed;
   top: 0;
   width: 100%;
-  z-index: 1000;
+  z-index: 2000;
 }
 .inside #map-container {
   background: blue none repeat scroll 0 0;
-  height: 87%;
-  position: fixed;
-  right: 0;
-  top: 80px;
-  width: 50%;
+  height: 400px;
+  width: 100%;
+  margin-top: 131.5px;
 }
 .inside #map {
   background-color: #ccc;
@@ -276,11 +276,11 @@ nav h1 a {
 #reviews-container {
   border-bottom: 1px solid #d9d9d9;
   border-top: 1px solid #fff;
-  padding: 140px 40px 30px;
-  width: 50%;
+  padding: 10px 30px 30px;
+  margin: 0 auto;
 }
 #reviews-container {
-  padding: 30px 40px 80px;
+  padding: 30px 30px 80px;
 }
 #reviews-container h2 {
   color: #f58500;
