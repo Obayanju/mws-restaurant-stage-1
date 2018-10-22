@@ -1,4 +1,5 @@
 let restaurants, neighborhoods, cuisines;
+let registerSW;
 var newMap;
 var markers = [];
 
@@ -6,22 +7,38 @@ var markers = [];
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
 document.addEventListener("DOMContentLoaded", event => {
-  initMap(); // added
-  fetchNeighborhoods();
-  fetchCuisines();
+  let initMapPromise = new Promise((resolve, reject) => {
+    initMap(resolve, reject); // added
+  });
+  let neighborhoodPromise = new Promise((resolve, reject) => {
+    fetchNeighborhoods(resolve, reject);
+  });
+  let cuisinePromise = new Promise((resolve, reject) => {
+    fetchCuisines(resolve, reject);
+  });
+
+  // a promise to alert us when all HTML content have been set
+  // We then register the SW so that in the install phase, we cache fully rendered HTML pages
+  Promise.all([initMapPromise, neighborhoodPromise, cuisinePromise]).then(
+    values => {
+      console.table(values);
+      // register service worker when all html content has been loaded
+      registerSW();
+    }
+  );
 });
 
 /**
  * Fetch all neighborhoods and set their HTML.
  */
-fetchNeighborhoods = () => {
+fetchNeighborhoods = (resolve, reject) => {
   DBHelper.fetchNeighborhoods((error, neighborhoods) => {
     if (error) {
       // Got an error
-      console.error(error);
+      reject(error);
     } else {
       self.neighborhoods = neighborhoods;
-      fillNeighborhoodsHTML();
+      fillNeighborhoodsHTML(resolve);
     }
   });
 };
@@ -29,7 +46,7 @@ fetchNeighborhoods = () => {
 /**
  * Set neighborhoods HTML.
  */
-fillNeighborhoodsHTML = (neighborhoods = self.neighborhoods) => {
+fillNeighborhoodsHTML = (resolve, neighborhoods = self.neighborhoods) => {
   const select = document.getElementById("neighborhoods-select");
   neighborhoods.forEach(neighborhood => {
     const option = document.createElement("option");
@@ -37,19 +54,20 @@ fillNeighborhoodsHTML = (neighborhoods = self.neighborhoods) => {
     option.value = neighborhood;
     select.append(option);
   });
+  resolve("neighbourhood html rendered");
 };
 
 /**
  * Fetch all cuisines and set their HTML.
  */
-fetchCuisines = () => {
+fetchCuisines = (resolve, reject) => {
   DBHelper.fetchCuisines((error, cuisines) => {
     if (error) {
       // Got an error!
-      console.error(error);
+      reject(error);
     } else {
       self.cuisines = cuisines;
-      fillCuisinesHTML();
+      fillCuisinesHTML(resolve);
     }
   });
 };
@@ -57,7 +75,7 @@ fetchCuisines = () => {
 /**
  * Set cuisines HTML.
  */
-fillCuisinesHTML = (cuisines = self.cuisines) => {
+fillCuisinesHTML = (resolve, cuisines = self.cuisines) => {
   const select = document.getElementById("cuisines-select");
 
   cuisines.forEach(cuisine => {
@@ -66,12 +84,13 @@ fillCuisinesHTML = (cuisines = self.cuisines) => {
     option.value = cuisine;
     select.append(option);
   });
+  resolve("cuisine HTML rendered");
 };
 
 /**
  * Initialize leaflet map, called from HTML.
  */
-initMap = () => {
+initMap = (resolve, reject) => {
   self.newMap = L.map("map", {
     center: [40.722216, -73.987501],
     zoom: 12,
@@ -91,7 +110,7 @@ initMap = () => {
     }
   ).addTo(newMap);
 
-  updateRestaurants();
+  updateRestaurants(resolve, reject);
 };
 /* window.initMap = () => {
   let loc = {
@@ -109,7 +128,7 @@ initMap = () => {
 /**
  * Update page and map for current restaurants.
  */
-updateRestaurants = () => {
+updateRestaurants = (resolve, reject) => {
   const cSelect = document.getElementById("cuisines-select");
   const nSelect = document.getElementById("neighborhoods-select");
 
@@ -125,10 +144,10 @@ updateRestaurants = () => {
     (error, restaurants) => {
       if (error) {
         // Got an error!
-        console.error(error);
+        reject(error);
       } else {
         resetRestaurants(restaurants);
-        fillRestaurantsHTML();
+        fillRestaurantsHTML(resolve);
       }
     }
   );
@@ -154,12 +173,12 @@ resetRestaurants = restaurants => {
 /**
  * Create all restaurants HTML and add them to the webpage.
  */
-fillRestaurantsHTML = (restaurants = self.restaurants) => {
+fillRestaurantsHTML = (resolve, restaurants = self.restaurants) => {
   const ul = document.getElementById("restaurants-list");
   restaurants.forEach(restaurant => {
     ul.append(createRestaurantHTML(restaurant));
   });
-  addMarkersToMap();
+  addMarkersToMap(resolve);
 };
 
 /**
@@ -199,7 +218,7 @@ createRestaurantHTML = restaurant => {
 /**
  * Add markers for current restaurants to the map.
  */
-addMarkersToMap = (restaurants = self.restaurants) => {
+addMarkersToMap = (resolve, restaurants = self.restaurants) => {
   restaurants.forEach(restaurant => {
     // Add marker to the map
     const marker = DBHelper.mapMarkerForRestaurant(restaurant, self.newMap);
@@ -209,6 +228,7 @@ addMarkersToMap = (restaurants = self.restaurants) => {
     }
     self.markers.push(marker);
   });
+  resolve("Restaurant and map marker HTML rendered");
 };
 /* addMarkersToMap = (restaurants = self.restaurants) => {
   restaurants.forEach(restaurant => {
@@ -222,21 +242,22 @@ addMarkersToMap = (restaurants = self.restaurants) => {
 } */
 
 /* register service worker */
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    console.log("loaded");
-    navigator.serviceWorker.register("/sw.js").then(
-      registration => {
-        // Registration was successful
-        console.log(
-          "ServiceWorker registration successful with scope: ",
-          registration.scope
-        );
-      },
-      err => {
-        // registration failed
-        console.log("ServiceWorker registration failed: ", err);
-      }
-    );
-  });
-}
+registerSW = () => {
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("/sw.js").then(
+        registration => {
+          // Registration was successful
+          console.log(
+            "ServiceWorker registration successful with scope: ",
+            registration.scope
+          );
+        },
+        err => {
+          // registration failed
+          console.log("ServiceWorker registration failed: ", err);
+        }
+      );
+    });
+  }
+};

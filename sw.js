@@ -8,15 +8,12 @@ let urlsToCache = [
 ];
 
 self.addEventListener("install", event => {
-  setTimeout(
-    // Perform install steps
-    event.waitUntil(
-      caches.open(CACHE_NAME).then(cache => {
-        console.log("opened cache");
-        return cache.addAll(urlsToCache);
-      })
-    ),
-    3000
+  // Perform install steps
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(cache => {
+      console.log("opened cache");
+      return cache.addAll(urlsToCache);
+    })
   );
 });
 
