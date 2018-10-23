@@ -20,8 +20,7 @@ document.addEventListener("DOMContentLoaded", event => {
   // a promise to alert us when all HTML content have been set
   // We then register the SW so that in the install phase, we cache fully rendered HTML pages
   Promise.all([initMapPromise, neighborhoodPromise, cuisinePromise]).then(
-    values => {
-      console.table(values);
+    () => {
       // register service worker when all html content has been loaded
       registerSW();
     }

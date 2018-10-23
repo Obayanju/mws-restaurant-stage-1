@@ -1,3 +1,7 @@
+const port = 8000; // Change this to your server port
+const localSiteHref = `http://localhost:${port}`;
+const prodSiteHref = "https://obayanju.github.io/mws-restaurant-stage-1";
+
 /**
  * Common database helper functions.
  */
@@ -7,8 +11,18 @@ class DBHelper {
    * Change this to restaurants.json file location on your server.
    */
   static get DATABASE_URL() {
-    const port = 8000; // Change this to your server port
-    return `${window.location.href}/data/restaurants.json`;
+    if (location.hostname === "localhost" || location.hostname === "") {
+      // connection is localhost
+      return `${localSiteHref}/data/restaurants.json`;
+    } else {
+      // connection is at production site
+
+      // we don't use location.href because href it changes depending on what page the user is at
+      // we also don't use location.origin because our data is at https://obayanju.github.io/mws-restaurant-stage-1 and not
+      // https://obayanju.github.io (location.origin)
+      return `${prodSiteHref}/data/restaurants.json`;
+    }
+    // return `${window.location.href}/data/restaurants.json`;
   }
 
   /**
@@ -165,10 +179,23 @@ class DBHelper {
    * Restaurant image URL.
    */
   static imageUrlsForRestaurant(restaurant) {
-    return [
-      `/img/${restaurant.photograph}`,
-      `/img/${restaurant.lowerResPhoto}`
-    ];
+    if (location.hostname === "localhost" || location.hostname === "") {
+      // connection is localhost
+      return [
+        `${localSiteHref}/img/${restaurant.photograph}`,
+        `${localSiteHref}/img/${restaurant.lowerResPhoto}`
+      ];
+    } else {
+      // connection is at production site
+
+      // we don't use location.href because href it changes depending on what page the user is at
+      // we also don't use location.origin because our data is at https://obayanju.github.io/mws-restaurant-stage-1 and not
+      // https://obayanju.github.io (location.origin)
+      return [
+        `${prodSiteHref}/img/${restaurant.photograph}`,
+        `${prodSiteHref}/img/${restaurant.lowerResPhoto}`
+      ];
+    }
   }
 
   /**
