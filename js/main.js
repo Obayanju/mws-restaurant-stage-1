@@ -1,5 +1,6 @@
 let restaurants, neighborhoods, cuisines;
 let registerSW;
+let initMapPromise, neighborhoodPromise, cuisinePromise;
 var newMap;
 var markers = [];
 
@@ -7,13 +8,13 @@ var markers = [];
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
 document.addEventListener("DOMContentLoaded", event => {
-  let initMapPromise = new Promise((resolve, reject) => {
+  initMapPromise = new Promise((resolve, reject) => {
     initMap(resolve, reject); // added
   });
-  let neighborhoodPromise = new Promise((resolve, reject) => {
+  neighborhoodPromise = new Promise((resolve, reject) => {
     fetchNeighborhoods(resolve, reject);
   });
-  let cuisinePromise = new Promise((resolve, reject) => {
+  cuisinePromise = new Promise((resolve, reject) => {
     fetchCuisines(resolve, reject);
   });
 
@@ -54,6 +55,10 @@ fillNeighborhoodsHTML = (resolve, neighborhoods = self.neighborhoods) => {
     select.append(option);
   });
   resolve("neighbourhood html rendered");
+  neighborhoodPromise.then(
+    value => console.log(value),
+    error => console.log(error)
+  );
 };
 
 /**
@@ -84,6 +89,7 @@ fillCuisinesHTML = (resolve, cuisines = self.cuisines) => {
     select.append(option);
   });
   resolve("cuisine HTML rendered");
+  cuisinePromise.then(value => console.log(value), error => console.log(error));
 };
 
 /**
@@ -228,6 +234,7 @@ addMarkersToMap = (resolve, restaurants = self.restaurants) => {
     self.markers.push(marker);
   });
   resolve("Restaurant and map marker HTML rendered");
+  initMapPromise.then(value => console.log(value), error => console.log(error));
 };
 /* addMarkersToMap = (restaurants = self.restaurants) => {
   restaurants.forEach(restaurant => {
