@@ -247,7 +247,11 @@ addMarkersToMap = (resolve, restaurants = self.restaurants) => {
 registerSW = () => {
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
-      navigator.serviceWorker.register("/sw.js").then(
+      let swPath = "";
+      location.hostname !== "localhost"
+        ? (swPath = `${prodSiteHref}/sw.js`)
+        : (swPath = "/sw.js");
+      navigator.serviceWorker.register(swPath).then(
         registration => {
           // Registration was successful
           console.log(
