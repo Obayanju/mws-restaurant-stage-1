@@ -236,16 +236,6 @@ addMarkersToMap = (resolve, restaurants = self.restaurants) => {
   resolve("Restaurant and map marker HTML rendered");
   initMapPromise.then(value => console.log(value), error => console.log(error));
 };
-/* addMarkersToMap = (restaurants = self.restaurants) => {
-  restaurants.forEach(restaurant => {
-    // Add marker to the map
-    const marker = DBHelper.mapMarkerForRestaurant(restaurant, self.map);
-    google.maps.event.addListener(marker, 'click', () => {
-      window.location.href = marker.url
-    });
-    self.markers.push(marker);
-  });
-} */
 
 /* register service worker */
 registerSW = () => {
