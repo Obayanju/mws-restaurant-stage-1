@@ -12,8 +12,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const header = document.querySelector(".nav-header a");
     // prodSiteHref is defined in dbhelper.js
     header.href = prodSiteHref;
-    const homeBreadCrumb = document.querySelector("#breadcrumb li a");
-    homeBreadCrumb.href = prodSiteHref;
   }
 
   initMapPromise = new Promise((resolve, reject) => {

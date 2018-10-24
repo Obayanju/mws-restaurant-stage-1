@@ -6,6 +6,11 @@ var newMap;
  */
 document.addEventListener("DOMContentLoaded", event => {
   initMap();
+  if (location.hostname !== "localhost") {
+    const homeBreadCrumb = document.querySelector("#breadcrumb li a");
+    // prodSiteHref is defined in dbhelper.js
+    homeBreadCrumb.href = prodSiteHref;
+  }
 });
 
 /**
