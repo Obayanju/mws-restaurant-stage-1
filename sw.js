@@ -1,10 +1,13 @@
 const CACHE_NAME = "restaurant-reviews-cache-v1";
+const origin = "https://obayanju.github.io/mws-restaurant-stage-1";
+if (location.href === "localhost") origin = "";
+
 let urlsToCache = [
-  "/index.html",
-  "/css/styles.css",
-  "/js/main.js",
-  "/js/dbhelper.js",
-  "/js/restaurant_info.js"
+  `${origin}/index.html`,
+  `${origin}/css/styles.css`,
+  `${origin}/js/main.js`,
+  `${origin}/js/dbhelper.js`,
+  `${origin}/js/restaurant_info.js`
 ];
 
 self.addEventListener("install", event => {
