@@ -9,7 +9,7 @@ The site was made mobile ready by doing the following -
 2. Responsive Images.
 3. Accessible Images.
 4. Use of Semantic elements.
-5. Use Service workers for offline first experience.
+5. Use Service workers for offline first experience - Every page user visits is cached.
 
 ### How to Run
 
