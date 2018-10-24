@@ -8,6 +8,14 @@ var markers = [];
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
 document.addEventListener("DOMContentLoaded", () => {
+  if (location.hostname !== "localhost") {
+    const header = document.querySelector(".nav-header a");
+    // prodSiteHref is defined in dbhelper.js
+    header.href = prodSiteHref;
+    const homeBreadCrumb = document.querySelector("#breadcrumb li a");
+    homeBreadCrumb.href = prodSiteHref;
+  }
+
   initMapPromise = new Promise((resolve, reject) => {
     initMap(resolve, reject); // added
   });
